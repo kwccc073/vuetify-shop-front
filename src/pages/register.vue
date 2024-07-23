@@ -7,6 +7,8 @@
       <v-divider></v-divider>
       <v-col cols="12">
         <v-form @submit.prevent="submit" :disabled="isSubmitting">
+          <!-- counter 表示顯示字符計數器，告訴用戶當前輸入了多少字符，以及最大允許的字符數。
+              例如：帳號會顯示 X/20-->
           <v-text-field
             label="帳號"
             minlength="4" maxlength="20" counter
