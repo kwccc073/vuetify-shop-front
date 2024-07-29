@@ -20,6 +20,7 @@ definePage({
 })
 </script>
 
+<!-- 設定要用的layout -->
 <route lang="yaml">
 meta:
   layout: admin

@@ -16,6 +16,7 @@ export default defineConfig({
   base: './',
   plugins: [
     VueRouter(),
+    // 預設已加上Layouts()
     Layouts(),
     Vue({
       template: { transformAssetUrls }

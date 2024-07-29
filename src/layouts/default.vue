@@ -1,5 +1,5 @@
 <template>
-  <!-- 手機板側欄 -->
+  <!-- 手機版 側欄------------------------------------------------------------------------------------------ -->
   <v-navigation-drawer v-if="mobile" v-model="drawer">
     <v-list nav>
       <template v-for="item in navItems" :key="item.to">
@@ -16,14 +16,14 @@
       <v-list-item prepend-icon="mdi-account-arrow-right" v-if="user.isLogin" title="登出" @click="logout"></v-list-item>
     </v-list>
   </v-navigation-drawer>
-  <!-- 導覽列 -->
+  <!--導覽列------------------------------------------------------------------------------------------ -->
   <v-app-bar>
     <v-container class="d-flex align-center">
       <!-- 標題 -->
       <v-btn to="/" :active="false">購物網</v-btn>
       <v-spacer />
+      <!-- 當為手機尺寸時，使用漢堡按鈕 -->
       <template v-if="mobile">
-        <!-- 手機板漢堡按鈕 -->
         <v-app-bar-nav-icon @click="drawer = true"></v-app-bar-nav-icon>
       </template>
       <template v-else>
@@ -46,17 +46,20 @@
 
 <script setup>
 import { ref, computed } from 'vue'
+// RWD斷點
 import { useDisplay } from 'vuetify'
 import { useUserStore } from '@/stores/user'
 import { useSnackbar } from 'vuetify-use-dialog'
 
+// 手機斷點
 const { mobile } = useDisplay()
 const user = useUserStore()
 const createSnackbar = useSnackbar()
 
+// 判斷是否點擊漢堡按鈕
 const drawer = ref(false)
 
-// 導覽列
+// 導覽列 --------------------------------------------------------------------------
 const navItems = computed(() => {
   return [
     { to: '/register', text: '註冊', icon: 'mdi-account-plus', show: !user.isLogin },
