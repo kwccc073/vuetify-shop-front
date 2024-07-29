@@ -8,11 +8,16 @@
           :title="item.text"
           v-if="item.show"
         >
+        <!-- append 是一個具名插槽，用於在某些組件中指定額外的內容 -->
+        <!-- 用於在v-list-item的尾部添圖標 -->
           <template #append>
+            <!-- 購物車右上角的紅點
+            參考：https://vuetifyjs.com/en/components/badges/#usage -->
             <v-badge color="error" :content="user.cart" v-if="item.to === '/cart' && user.cart > 0" inline></v-badge>
           </template>
         </v-list-item>
       </template>
+      <!-- 登出按鈕 -->
       <v-list-item prepend-icon="mdi-account-arrow-right" v-if="user.isLogin" title="登出" @click="logout"></v-list-item>
     </v-list>
   </v-navigation-drawer>
@@ -31,9 +36,12 @@
         <template v-for="item in navItems" :key="item.to">
           <v-btn v-if="item.show" :prepend-icon="item.icon" :to="item.to">
             {{ item.text }}
+            <!-- 購物車右上角的紅點
+            參考：https://vuetifyjs.com/en/components/badges/#usage -->
             <v-badge color="red" :content="user.cart" v-if="item.to === '/cart' && user.cart > 0" floating></v-badge>
           </v-btn>
         </template>
+        <!-- 登出按鈕 -->
         <v-btn prepend-icon="mdi-account-arrow-right" v-if="user.isLogin" @click="logout">登出</v-btn>
       </template>
     </v-container>
@@ -48,11 +56,11 @@
 import { ref, computed } from 'vue'
 // RWD斷點
 import { useDisplay } from 'vuetify'
+// 引入使用者的狀態
 import { useUserStore } from '@/stores/user'
 import { useSnackbar } from 'vuetify-use-dialog'
 
-// 手機斷點
-const { mobile } = useDisplay()
+const { mobile } = useDisplay() // 手機斷點
 const user = useUserStore()
 const createSnackbar = useSnackbar()
 

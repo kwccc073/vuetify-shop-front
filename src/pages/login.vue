@@ -30,12 +30,17 @@
 </template>
 
 <script setup>
+// 引入驗證套件
 import { useForm, useField } from 'vee-validate'
 import * as yup from 'yup'
+// 引入路由
 import { useRouter } from 'vue-router'
-import validator from 'validator'
 import { definePage } from 'vue-router/auto'
+// 驗證套件
+import validator from 'validator'
+// 引入store
 import { useUserStore } from '@/stores/user'
+
 // 對話框
 import { useSnackbar } from 'vuetify-use-dialog'
 
@@ -48,10 +53,12 @@ definePage({
   }
 })
 
+// 一定要寫
 const router = useRouter()
 const user = useUserStore()
 const createSnackbar = useSnackbar()
 
+// 定義表單的欄位
 const schema = yup.object({
   account: yup
     .string()
@@ -78,6 +85,7 @@ const { handleSubmit, isSubmitting } = useForm({
 const account = useField('account')
 const password = useField('password')
 
+// values表示使用者表單的內容
 const submit = handleSubmit(async (values) => {
   const result = await user.login(values)
   if (result === '登入成功') {
@@ -87,6 +95,7 @@ const submit = handleSubmit(async (values) => {
         color: 'green'
       }
     })
+    // 登入成功會跳到首頁
     router.push('/')
   } else {
     alert(result)

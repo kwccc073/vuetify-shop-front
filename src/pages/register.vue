@@ -4,8 +4,10 @@
       <v-col cols="12">
         <h1 class="text-center">註冊</h1>
       </v-col>
-      <v-divider></v-divider> //分隔線
+      <!-- 分隔線 -->
+      <v-divider></v-divider>
       <v-col cols="12">
+        <!-- :disabled="isSubmitting"表示送出時停用表單 ***isSubmittin是從useForm()解構出來的**** -->
         <v-form @submit.prevent="submit" :disabled="isSubmitting">
           <!-- counter 表示顯示字符計數器，告訴用戶當前輸入了多少字符，以及最大允許的字符數。
               例如：帳號會顯示 X/20-->
@@ -33,6 +35,7 @@
             :error-messages="passwordConfirm.errorMessage.value"
           ></v-text-field>
           <div class="text-center">
+            <!-- :loading="isSubmitting" 送出時停用且按鈕為加載狀態(轉圈)的樣子 -->
             <v-btn type="submit" color="green" :loading="isSubmitting">註冊</v-btn>
           </div>
         </v-form>
@@ -48,8 +51,10 @@ import { useForm, useField } from 'vee-validate'
 import * as yup from 'yup'
 import validator from 'validator'
 import { useApi } from '@/composables/axios'
+// 路由
 import { useRouter } from 'vue-router'
 import { definePage } from 'vue-router/auto'
+// 彈出對話框
 import { useSnackbar } from 'vuetify-use-dialog'
 
 
@@ -61,7 +66,7 @@ definePage({
   }
 })
 
-const { api } = useApi()
+const { api } = useApi() // 一定要呼叫，後續才能用
 const router = useRouter()
 const createSnackbar = useSnackbar()
 
@@ -117,12 +122,14 @@ const email = useField('email')
 const password = useField('password')
 const passwordConfirm = useField('passwordConfirm')
 
+// handleSubmit()來自上方useForm()
 const submit = handleSubmit(async (values) => {
   try {
     await api.post('/user', {
       account: values.account,
       email: values.email,
       password: values.password
+      // 後端沒有確認密碼，所以不用寫確認密碼
     })
     createSnackbar({
       text: '註冊成功',
@@ -130,6 +137,7 @@ const submit = handleSubmit(async (values) => {
         color: 'green'
       }
     })
+    // 跳到登入頁
     router.push('/login')
   } catch (error) {
     console.log(error)

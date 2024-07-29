@@ -14,10 +14,13 @@ const router = createRouter({
   extendRoutes: setupLayouts
 })
 
+// 進去每一頁之前
+// to 去哪裡、from 從哪裡來、next 重新導向
 router.beforeEach(async (to, from, next) => {
   const user = useUserStore()
-
+  // 進來網頁的第一次導航（一定會發生）
   if (from === START_LOCATION) {
+    // 取得使用者資料
     await user.profile()
   }
 
@@ -28,7 +31,7 @@ router.beforeEach(async (to, from, next) => {
   } else if (to.meta.admin && !user.isAdmin) {
     next('/')
   } else {
-    next()
+    next() // 一定要有next()呼叫下一次的動作
   }
 })
 
