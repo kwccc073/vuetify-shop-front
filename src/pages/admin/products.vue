@@ -8,6 +8,7 @@
         <v-btn color="green" @click="openDialog(null)">新增商品</v-btn>
       </v-col>
       <v-col cols="12">
+        <!-- v-data-table-server 有翻頁、排序功能的表格 -->
         <v-data-table-server
           v-model:items-per-page="tableItemsPerPage"
           v-model:sort-by="tableSortBy"
@@ -168,6 +169,7 @@ const schema = yup.object({
 })
 const { handleSubmit, isSubmitting, resetForm } = useForm({
   validationSchema: schema,
+  // 初始值設定
   initialValues: {
     name: '',
     price: 0,

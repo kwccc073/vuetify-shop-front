@@ -1,3 +1,4 @@
+// 管理要儲存的東西
 // Utilities
 import { defineStore } from 'pinia'
 import { ref, computed } from 'vue'
@@ -126,7 +127,9 @@ export const useUserStore = defineStore('user', () => {
 }, {
   // 保存localstorage的設定
   persist: {
+    // 存儲在瀏覽器local storage中的鍵名
     key: 'shop',
+    // 需要持久儲存的東西
     paths: ['token']
   }
 })

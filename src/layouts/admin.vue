@@ -1,8 +1,11 @@
 <template>
+  <!-- permanent表示永久固定 -->
   <v-navigation-drawer permanent>
     <v-list>
+      <!-- 使用者名稱+使用者帳號 -->
       <v-list-item :prepend-avatar="avatar" :title="user.account"></v-list-item>
     </v-list>
+    <!-- 分隔線 -->
     <v-divider></v-divider>
     <v-list>
       <v-list-item

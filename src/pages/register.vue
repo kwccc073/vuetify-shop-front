@@ -52,7 +52,7 @@ import * as yup from 'yup'
 import validator from 'validator'
 import { useApi } from '@/composables/axios'
 // 路由
-import { useRouter } from 'vue-router'
+import { useRouter } from 'vue-router' // 跳轉分頁用
 import { definePage } from 'vue-router/auto'
 // 彈出對話框
 import { useSnackbar } from 'vuetify-use-dialog'
@@ -67,8 +67,8 @@ definePage({
 })
 
 const { api } = useApi() // 一定要呼叫，後續才能用
-const router = useRouter()
-const createSnackbar = useSnackbar()
+const router = useRouter() // 跳轉分頁用
+const createSnackbar = useSnackbar() // 對話框
 
 // 表單有什麼欄位裡面就放什麼欄位當key，key建議和後端一樣
 const schema = yup.object({
