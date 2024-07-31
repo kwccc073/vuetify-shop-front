@@ -106,25 +106,29 @@ const schema = yup.object({
     // .ref('password')     代表這個 schema 的 password 的欄位值
     .oneOf([yup.ref('password')], '密碼不一致')
 })
-// useForm()建立表單 (順序不可顛倒)------------------------------------------------------------
-// useForm()來自vee-validate套件
+// useForm()來自vee-validate套件，用於建立表單 (順序不可顛倒)------------------------------------------------------------
 // 解構出handleSubmit (處理送出表單的動作) 和 isSubmitting (判斷表單是否在送出)
-// 指定驗證格式使用上方建立的schema
 const { handleSubmit, isSubmitting } = useForm({
+  // 指定驗證格式使用上方建立的schema
   validationSchema: schema
 })
-// useField()建立表單的各個欄位 (順序不可顛倒)---------------------------------------------
-// useField()來自vee-validate套件
-// 欄位名稱要跟跟上方schema的一樣
-// v-model綁這些值，例如上方的v-model='account.value.value'
+// useField()來自vee-validate套件，是建立表單的各個欄位 (順序不可顛倒)---------------------------------------------
+// useField()裡的欄位名稱要跟跟上方schema的一樣
+// useField('account') => 返回與 account 字段相關的值(value)和錯誤訊息(errorMessage)
+
+// v-model和error-messages會綁這些值
+// 例如上方的v-model='account.value.value'、:error-messages="account.errorMessage.value"
+//  當字段驗證失敗時，vee-validate 會自動更新 errorMessage，並顯示相應的錯誤信息（schema裡自己定義的，例如'密碼不一致'）
 const account = useField('account')
 const email = useField('email')
 const password = useField('password')
 const passwordConfirm = useField('passwordConfirm')
 
-// handleSubmit()來自上方useForm()
+// 定義送出的function-------------------------------------------------------------
+// handleSubmit()來自上方useForm()，會先執行驗證，過了再執行下面的程式碼
 const submit = handleSubmit(async (values) => {
   try {
+    // {}以json格式將資料送出
     await api.post('/user', {
       account: values.account,
       email: values.email,
