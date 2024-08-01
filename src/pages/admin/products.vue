@@ -8,7 +8,23 @@
         <v-btn color="green" @click="openDialog(null)">新增商品</v-btn>
       </v-col>
       <v-col cols="12">
-        <!-- v-data-table-server 有翻頁、排序功能的表格 -->
+        <!-- 商品表格--------------------------------------------------------- -->
+        <!-- v-data-table-server 是有翻頁、排序功能的表格，使後端只會回傳當下那個頁面的東西（比較不會跑太久） -->
+        <!-- 要綁定的屬性
+        items-per-page 一頁顯示幾個
+        sort-by 在表格的哪個欄位，用什麼東西去排序
+        page 頁碼，表示表格現在被翻到哪一頁
+        headers 表格欄位設定
+        items 表示表格要顯示的東西
+        items-length 每一頁加起來總共有幾筆資料
+        loading 載入狀態
+        search 現在搜尋的文字是什麼
+
+        @update:items-per-page 當"每一頁顯示幾筆"改變時，要執行後方function去重新取資料
+        @update:sort-by 當"排序"改變時，要執行後方function去重新取資料
+        @update:page 當"翻頁"時，要執行後方function去重新取資料
+        
+        -->
         <v-data-table-server
           v-model:items-per-page="tableItemsPerPage"
           v-model:sort-by="tableSortBy"
@@ -23,6 +39,8 @@
           @update:page="tableLoadItems(false)"
           hover
         >
+        <!-- 特定的東西（如圖片）要修改顯示內容的方式如下---------------------- -->
+          <!-- 設定其插槽名稱為top -->
           <template #top>
             <v-text-field
               label="搜尋"
@@ -32,13 +50,19 @@
               @keydown.enter="tableLoadItems(true)"
             ></v-text-field>
           </template>
+          <!-- 圖片---------- -->
+          <!-- # 是指定插槽 => 欄位名稱 -->
           <template #[`item.image`]="{ value }">
             <v-img :src="value" height="50px"></v-img>
           </template>
+          <!-- 是否上架------- -->
           <template #[`item.sell`]="{ value }">
             <v-icon icon="mdi-check" v-if="value"></v-icon>
           </template>
+          <!-- 操作---------- -->
+          <!-- { item }表示原始的東西而不是值**** -->
           <template #[`item.action`]="{ item }">
+            <!-- 點擊時打開編輯視窗，並帶入item(這一列的商品資料) -->
             <v-btn icon="mdi-pencil" variant="text" color="blue" @click="openDialog(item)"></v-btn>
           </template>
         </v-data-table-server>
@@ -146,7 +170,9 @@ const dialog = ref({
 })
 
 const openDialog = (item) => {
+  // 如果有帶入商品資料
   if (item) {
+    // 將id傳入現在商品的id，其他項目依此類推
     dialog.value.id = item._id
     name.value.value = item.name
     price.value.value = item.price
@@ -231,6 +257,7 @@ const submit = handleSubmit(async (values) => {
   // handleSubmit()不會執行驗證檔案上傳（因為是引入其他套件），因此要自己寫：
   // fileRecords.value[0]是指第一個檔案
   if (fileRecords.value[0]?.error) return
+  // dialog.value.id.length === 0 => 如果是新增商品的時候，沒放圖片會被return
   if (dialog.value.id.length === 0 && fileRecords.value.length < 1) return
 
   try {
@@ -244,30 +271,32 @@ const submit = handleSubmit(async (values) => {
     fd.append('category', values.category)
     fd.append('sell', values.sell)
 
-    // 上傳檔案用
+    // 如果有放檔案就要放入fd
     if (fileRecords.value.length > 0) {
       fd.append('image', fileRecords.value[0].file)
     }
 
-    // 如果id是空的 => 新增商品
+    // 如果id是空的 => 新增商品---------------------
     if (dialog.value.id === '') {
       await apiAuth.post('/product', fd)
     } else {
-      // 如果id不是空的 => 編輯商品
-      // PATCH表示更新部分資源欄位
+      // 如果id不是空的 => 編輯商品-----------------
+      // .patch表示更新部分資源欄位
       await apiAuth.patch('/product/' + dialog.value.id, fd)
     }
 
     // 對話框
     createSnackbar({
+      // 如果id是0 => 新增成功，如果有id => 編輯成功
       text: dialog.value.id === '' ? '新增成功' : '編輯成功',
       snackbarProps: {
         color: 'green'
       }
     })
-
-    closeDialog()  // 關閉視窗
-    tableLoadItems(true)
+    // 關閉視窗
+    closeDialog()  
+    // 新增或編輯後，使重新載入表格資料以更新
+    tableLoadItems(true) 
   } catch (error) {
     console.log(error)
     createSnackbar({
@@ -279,27 +308,49 @@ const submit = handleSubmit(async (values) => {
   }
 })
 
-const tableItemsPerPage = ref(10)
+// 一頁顯示幾個
+const tableItemsPerPage = ref(10) 
+// 排序
+// 可以針對很多個欄位去排序，但後端就也需要寫出那個功能（這個範例只有一個）
 const tableSortBy = ref([
+  // createdAt是建立的日期
+  // order是正的或到的排，desc是倒的
   { key: 'createdAt', order: 'desc' }
 ])
+// 頁碼，表示表格現在被翻到哪一頁
+// 如何從現在第幾頁、一頁幾筆算出後端要回給前端第幾筆～第幾筆的資料？
 const tablePage = ref(1)
+// 表格要顯示的東西
 const tableItems = ref([])
+// 表格欄位設定（理論上應該會固定，所以不用ref）
 const tableHeaders = [
+  // align: 'center'置中
+  // sortable: 此欄位是否可以排序
+  // key要跟資料庫的欄位對到，把相同key的值帶入這個欄位
   { title: '圖片', align: 'center', sortable: false, key: 'image' },
   { title: '名稱', align: 'center', sortable: true, key: 'name' },
   { title: '價格', align: 'center', sortable: true, key: 'price' },
   { title: '分類', align: 'center', sortable: true, key: 'category' },
   { title: '上架', align: 'center', sortable: true, key: 'sell' },
+  // 原本的資烙沒有action，表示其為獨立於資料的欄位 => 在上方寫<template #[`item.action`]="{ item }"></template>
   { title: '操作', align: 'center', sortable: false, key: 'action' }
 ]
+// 預設剛點進來的時候會是載入狀態
 const tableLoading = ref(true)
+// 每一頁加起來總共有幾筆資料，預設為0
 const tableItemsLength = ref(0)
+// 現在搜尋的文字是什麼
 const tableSearch = ref('')
+
+// 表格載入的funtion-------------------------------------------------------
 const tableLoadItems = async (reset) => {
+  // 如果重設表格會回到第一頁
   if (reset) tablePage.value = 1
+  // 正在loading
   tableLoading.value = true
   try {
+    // 取得表格資料
+    // 設定get參數：.get(網址,請求的設定) ***get無送出的資料***
     const { data } = await apiAuth.get('/product/all', {
       params: {
         page: tablePage.value,
@@ -309,7 +360,9 @@ const tableLoadItems = async (reset) => {
         search: tableSearch.value
       }
     })
+    // 從0開始刪除, 所有東西, 把回來的資料放進去
     tableItems.value.splice(0, tableItems.value.length, ...data.result.data)
+    // 陣列的長度
     tableItemsLength.value = data.result.total
   } catch (error) {
     console.log(error)
@@ -322,7 +375,8 @@ const tableLoadItems = async (reset) => {
   }
   tableLoading.value = false
 }
-tableLoadItems()
+
+tableLoadItems() // 第一次進來一定要呼叫
 </script>
 
 <route lang="yaml">

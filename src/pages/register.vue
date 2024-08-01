@@ -129,7 +129,10 @@ const passwordConfirm = useField('passwordConfirm')
 const submit = handleSubmit(async (values) => {
   try {
     // {}以json格式將資料送出
-    await api.post('/user', {
+    await api.post('/user', 
+    // 要出去的資料
+    {
+      // 這些東西會顯示在Request payload上面
       account: values.account,
       email: values.email,
       password: values.password
