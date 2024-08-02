@@ -8,6 +8,7 @@
 import vuetify from './vuetify'
 import pinia from '@/stores'
 import router from '@/router'
+// 彈出對話框
 import VuetifyUseDialog from 'vuetify-use-dialog'
 // 引入@boindil/vue-file-agent-next（上傳檔案的功能用）
 import VueFileAgentNext from '@boindil/vue-file-agent-next'

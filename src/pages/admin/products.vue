@@ -23,7 +23,6 @@
         @update:items-per-page 當"每一頁顯示幾筆"改變時，要執行後方function去重新取資料
         @update:sort-by 當"排序"改變時，要執行後方function去重新取資料
         @update:page 當"翻頁"時，要執行後方function去重新取資料
-        
         -->
         <v-data-table-server
           v-model:items-per-page="tableItemsPerPage"
@@ -172,7 +171,7 @@ const dialog = ref({
 const openDialog = (item) => {
   // 如果有帶入商品資料
   if (item) {
-    // 將id傳入現在商品的id，其他項目依此類推
+    // 將id傳入現在商品(item)的id，其他項目依此類推
     dialog.value.id = item._id
     name.value.value = item.name
     price.value.value = item.price
@@ -251,7 +250,7 @@ const sell = useField('sell')
 const fileRecords = ref([])
 const rawFileRecords = ref([])
 
-// 步驟6-1. 定義送出的function-----------------------------------------------------------------
+// 步驟6-1. 定義送出的function-------------------------------
 // handleSubmit()會先上方的schema執行驗證，過了再執行下面的程式碼
 const submit = handleSubmit(async (values) => {
   // handleSubmit()不會執行驗證檔案上傳（因為是引入其他套件），因此要自己寫：
@@ -308,6 +307,7 @@ const submit = handleSubmit(async (values) => {
   }
 })
 
+// 表格用--------------------------------------------------------------------------------------------------------------------
 // 一頁顯示幾個
 const tableItemsPerPage = ref(10) 
 // 排序
@@ -349,7 +349,7 @@ const tableLoadItems = async (reset) => {
   // 正在loading
   tableLoading.value = true
   try {
-    // 取得表格資料
+    // 取得表格要用的資料
     // 設定get參數：.get(網址,請求的設定) ***get無送出的資料***
     const { data } = await apiAuth.get('/product/all', {
       params: {
