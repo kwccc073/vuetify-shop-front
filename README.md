@@ -16,3 +16,4 @@
 # 20240717 課程
 ## 頁面的重新導向功能 (影片最前面處)－router\index.js
 ```next('路徑')```
+## vuetify的語言包設定 (影片00:12:00處)－plugins\vuetify
