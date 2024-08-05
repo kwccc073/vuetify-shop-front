@@ -77,6 +77,7 @@ export const useUserStore = defineStore('user', () => {
     cart.value = 0
   }
 
+  // 加入購物車-------------------------------------------------
   const addCart = async (product, quantity) => {
     try {
       const { data } = await apiAuth.patch('/user/cart', {
@@ -85,7 +86,7 @@ export const useUserStore = defineStore('user', () => {
       cart.value = data.result
       return {
         color: 'green',
-        text: '成功'
+        text: '加入購物車成功-stores'
       }
     } catch (error) {
       return {

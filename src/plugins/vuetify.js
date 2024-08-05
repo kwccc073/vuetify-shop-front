@@ -11,7 +11,8 @@ import 'vuetify/styles'
 // Composables
 import { createVuetify } from 'vuetify'
 
-import { zhHant } from 'vuetify/locale'
+// 引入語言包（zhHant表示繁體中文）
+import { zhHant } from 'vuetify/locale' 
 
 // https://vuetifyjs.com/en/introduction/why-vuetify/#feature-guides
 export default createVuetify({

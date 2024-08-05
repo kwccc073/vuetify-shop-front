@@ -45,6 +45,7 @@ const router = useRouter()
 const createSnackbar = useSnackbar()
 const user = useUserStore()
 
+// 商品的預設值
 const product = ref({
   _id: '',
   name: '',
