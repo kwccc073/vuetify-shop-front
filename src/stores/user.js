@@ -96,6 +96,7 @@ export const useUserStore = defineStore('user', () => {
     }
   }
 
+  // 結帳-------------------------------------------------------------
   const checkout = async () => {
     try {
       await apiAuth.post('/order')

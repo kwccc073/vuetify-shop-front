@@ -43,12 +43,14 @@ const createSnackbar = useSnackbar()
 const items = ref([])
 const headers = [
   { title: '編號', key: '_id' },
+  // .toLocaleString() 是 JS中 Date 和 Number 物件的方法，用來將日期、時間或數字轉換為當地語言格式的字符串
   { title: '日期', key: 'createdAt', value: item => new Date(item.createdAt).toLocaleString() },
   { title: '商品', key: 'cart', sortable: false },
   {
     title: '金額',
     key: 'price',
     value: item => {
+      // 算法和購物車總金額一樣
       return item.cart.reduce((total, current) => {
         return total + current.quantity * current.p_id.price
       }, 0)
@@ -63,7 +65,7 @@ const loadItems = async () => {
   } catch (error) {
     console.log(error)
     createSnackbar({
-      text: error?.response?.data?.message || '發生錯誤',
+      text: error?.response?.data?.message || '發生錯誤-page',
       snackbarProps: {
         color: 'red'
       }
