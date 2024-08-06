@@ -29,3 +29,6 @@
 ## 購物車（影片02:12:14處）－stores\user.js
 ## 加入購物車的按鈕（影片02:17:13處）－components\ProductCard.vue
 ## 購物車頁面（影片02:40:00處）－pages\cart.vue
+## 結帳按鈕（影片03:38:45處）－pages\cart.vue
+
+## 資料庫結構規劃 （影片04:11:50處）
