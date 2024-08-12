@@ -23,7 +23,7 @@ import { useSnackbar } from 'vuetify-use-dialog'
 import { ref } from 'vue'
 
 const user = useUserStore()
-const router = useRouter()
+const router = useRouter() // 路由
 const createSnackbar = useSnackbar()
 
 // props表示元件可以接收的資料，defineProps()是script setup的固定寫法（不須import）
@@ -32,6 +32,7 @@ const props = defineProps(['_id', 'category', 'description', 'image', 'name', 'p
 
 const loading = ref(false) // UIUX用，使按下去時按鈕為載入狀態（避免一直點）
 
+// 點擊按鈕時要執行的function
 const addCart = async () => {
   // 如果沒有登入
   if (!user.isLogin) {
@@ -40,6 +41,7 @@ const addCart = async () => {
     return
   }
   loading.value = true // 還沒跑完的時候loading為true
+  // user.addCart()是store裡的addCart
   const result = await user.addCart(props._id, 1)
   createSnackbar({
     text: result.text,
